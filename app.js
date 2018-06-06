@@ -15,11 +15,9 @@ app.use(express.static(__dirname + '/dist'));
 
 // handle every other route with index.html, which will contain
 // a script tag to your application's JavaScript file(s).
-
-// app.get('*', function (request, response) {
-//   response.sendFile(path.resolve(__dirname, 'index.html'));
-// });
-
+  app.get('*', function (request, response) {
+    response.sendFile(path.resolve(__dirname, 'index.html'));
+  });
 // end serve the angular index file work
 
 app.use(cors());
@@ -171,12 +169,8 @@ app.get('/api/getMonthsAbsorption', function (request, response) {
           console.log(err);
           return res.status(500).send(err);
         } else{
-            console.log('months:', months);
+            // console.log('months:', months);
             response.send(months);
-            // var months = [];
-            // for (var i = 0; i < res.length; i++) {
-            //   months.push(res[i].Date); 
-            // } 
         }
   });
 });
@@ -191,11 +185,49 @@ app.get('/api/getAbsorptionRates/:nmYr', function (request, response) {
           console.log(err);
           return res.status(500).send(err);
         } else{
-            console.log('absorptionRatess:', absorptionRatess);
+            // console.log('absorptionRatess:', absorptionRatess);
             response.send(absorptionRatess);
         }
   });
 });
+
+// sending email
+var nodemailer = require('nodemailer');
+
+app.post('/api/sendEmail', function (request, response) {
+
+      var message = '';
+
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: request.body.email,
+          pass: request.body.password
+        }
+      });
+
+      var mailOptions = { 
+          to: 'info@repolus.com', 
+          // to: 'taimoor.bsse1805@iiu.edu.pk', 
+          subject: request.body.subject, 
+          // text: request.body.subject, // plain text body\
+          html: 'Hi, <br> Repolus <br><br>' + request.body.comment + '<br><br>Thanks,<br>' + request.body.name + '.'
+      };
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              message = "email not send";
+              return response.status(500).send(error);
+          }
+
+          message = "Message is sended successfully to Repolus Management.";
+          response.json(message);
+      });
+
+});
+
+
 
 var server = app.listen(port, function() {
   var host = server.address().address;
