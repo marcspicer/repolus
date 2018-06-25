@@ -18,7 +18,7 @@ var express = require('express'),
 
         var mailOptions = { 
             to: 'info@repolus.com', 
-            // to: 'taimoor.bsse1805@iiu.edu.pk', 
+            // to: '', 
             subject: request.body.subject, 
             // text: request.body.subject, // plain text body\
             html: 'Hi, <br> Repolus <br><br>' + request.body.comment + '<br><br>Thanks,<br>' + request.body.name + '.'
