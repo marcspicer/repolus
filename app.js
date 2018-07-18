@@ -13,6 +13,7 @@ app.use(cors());
 app.use(require('./controllers/neighborhoods'));
 app.use(require('./controllers/categories'));
 app.use(require('./controllers/absorptionrates'));
+app.use(require('./controllers/marketReports'));
 app.use(require('./controllers/contact'));
 
 // serve the angular index file work
