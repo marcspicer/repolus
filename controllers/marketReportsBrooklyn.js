@@ -19,19 +19,14 @@ var express = require('express'),
   // get one neighborhood market reports based on specific neighborhood name.
   router.post('/api/getOneNeighborhoodMRBrooklyn', function (request, response) {
 
-    console.log("getOneNeighborhoodMRBrooklyn called");
-    console.log("request.body.name:", request.body.name);
-
     MarketReportsBrooklyns.find({'NeighborhoodName': request.body.name}, function(err, mrRpOneNeibhorhood) {
         if(err){
             console.log(err);
             return res.status(500).send(err);
           } else{
-              console.log('mrRpOneNeibhorhood:', mrRpOneNeibhorhood);
               response.send(mrRpOneNeibhorhood);
           }
     }); 
   });
-
 
   module.exports = router;
