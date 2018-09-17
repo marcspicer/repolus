@@ -1,32 +1,39 @@
 var express = require('express'),
-    router = express.Router(),
-    mongoose = require('mongoose');
+  router = express.Router(),
+  mongoose = require('mongoose');
 
-  // Categories Schema
-  var marketReportsSchema = mongoose.Schema({
-     NeighborhoodName: String,
-     Quarter: String,
-     Sales: Number,
-     AveragePrice: String,
-     MedianPrice: String,
-     AveragePPRoom: String,
-     DaysonMarket: Number,
-     SellingVsAsking: String
-  });
+// Categories Schema
+var marketReportsSchema = mongoose.Schema({
+   NeighborhoodName: String,
+   Quarter: String,
+   Sales: Number,
+   AveragePrice: String,
+   MedianPrice: String,
+   AveragePPRoom: String,
+   DaysonMarket: Number,
+   SellingVsAsking: String
+});
 
-  var MarketReportsManhattans = mongoose.model('MarketReportsManhattans', marketReportsSchema);
+var MarketReportsManhattans = mongoose.model('MarketReportsManhattans', marketReportsSchema);
 
-  // get one neighborhood market reports based on specific neighborhood name.
-  router.post('/api/getOneNeighborhoodMReport', function (request, response) {
+// get one neighborhood market reports based on specific neighborhood name.
+router.post('/api/getOneNeighborhoodMReport', function (request, response) {
 
-    MarketReportsManhattans.find({'NeighborhoodName': request.body.name}, function(err, mrRpOneNeibhorhood) {
-        if(err){
-            console.log(err);
-            return res.status(500).send(err);
-          } else{
-              response.send(mrRpOneNeibhorhood);
-          }
+  MarketReportsManhattans.find({
+      $and : [
+        { 'NeighborhoodName': request.body.name },
+        { 'Year': { $gte: request.body.dateRange.startYear, $lte: request.body.dateRange.endYear} }
+      ]
+    },
+    function(err, mrRpOneNeibhorhood) {
+      if(err){
+          console.log(err);
+          return res.status(500).send(err);
+        } else{
+            // console.log('mrRpOneNeibhorhood::', mrRpOneNeibhorhood);
+            response.send(mrRpOneNeibhorhood);
+        }
     }); 
-  });
+});
 
-  module.exports = router;
+module.exports = router;
